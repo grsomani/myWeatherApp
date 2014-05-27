@@ -1,4 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="12F45" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+    <entity name="CitiesSaved" representedClassName="CitiesSaved" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="city_weather" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WeatherList" syncable="YES"/>
+    </entity>
+    <entity name="CityTemperature" representedClassName="CityTemperature" syncable="YES">
+        <attribute name="day" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="eve" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="max" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="min" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="morn" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="night" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="WeatherList" representedClassName="WeatherList" syncable="YES">
+        <attribute name="clouds" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="deg" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dt" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="humidity" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pressure" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rain" optional="YES" attributeType="String" defaultValueString="nil" syncable="YES"/>
+        <attribute name="speed" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="weather" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <relationship name="city_temp" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CityTemperature" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="WeatherList" positionX="-108" positionY="18" width="128" height="178"/>
+        <element name="CitiesSaved" positionX="-317" positionY="-9" width="128" height="73"/>
+        <element name="CityTemperature" positionX="-207" positionY="54" width="128" height="133"/>
+    </elements>
 </model>

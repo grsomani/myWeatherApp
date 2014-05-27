@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *temperatureLabel;
 @property (weak, nonatomic) IBOutlet UILabel *weatherDescLabel;
 @property (weak, nonatomic) IBOutlet UILabel *tempMinMaxLabel;
-@property (weak, nonatomic) IBOutlet UILabel *moreDetailsLabel;
+@property (weak, nonatomic) IBOutlet UIButton *moreDetailsBtn;
+@property (weak, nonatomic) IBOutlet UIButton *addLocationBtn;
 
 @end

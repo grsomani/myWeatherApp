@@ -8,9 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LocationSearchViewController : UIViewController <WebRequestDelegate, UISearchBarDelegate>
+@protocol LocationAddedDelegate <NSObject>
+
+-(void) locationAdded;
+
+@end
+@interface LocationSearchViewController : UIViewController <WebRequestDelegate, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) IBOutlet UITableView *searchLocationTable;
+@property (strong, nonatomic) UITableViewCell *previousCell;
+@property (nonatomic, assign) id <LocationAddedDelegate> delegate;
 
 @end

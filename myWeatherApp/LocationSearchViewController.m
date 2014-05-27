@@ -7,12 +7,15 @@
 //
 
 #import "LocationSearchViewController.h"
+#import "CityList.h"
 
 @interface LocationSearchViewController ()
 
 @end
 
 @implementation LocationSearchViewController
+
+NSArray *searchResultsArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -39,6 +42,7 @@
     self.navigationItem.rightBarButtonItem = doneButton;
     
     self.searchBar.delegate = self;
+    searchResultsArray = nil;
 }
 
 -(void) cancel
@@ -48,6 +52,14 @@
 
 -(void) done
 {
+    if(_previousCell != nil)
+    {
+        [[AppContext sharedAppContext] saveNewCity:_previousCell.textLabel.text];
+        if([self.delegate respondsToSelector:@selector(locationAdded)])
+        {
+            [self.delegate locationAdded];
+        }
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (void)didReceiveMemoryWarning
@@ -58,19 +70,53 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar;                     // called when keyboard search button pressed
 {
-//    [FetchAndParseJSON sharedFetchAndParseJSON].delegate=self;
-//    [[FetchAndParseJSON sharedFetchAndParseJSON] getCityListForKeyword:searchBar.text];
+    [AppContext sharedAppContext].delegate=self;
+    [[AppContext sharedAppContext] getCityListForKeyword:searchBar.text];
     [self.searchBar resignFirstResponder];
 }
 
 #pragma mark - WebServices Delegate
 -(void)didSucceedToFetchJSONData:(NSArray *)cityWeatherArray;
 {
-    
+    searchResultsArray = [NSArray arrayWithArray:cityWeatherArray];
+    [self.searchLocationTable reloadData];
 }
 -(void)didFailedToFetchJSONData:(NSError *)error
 {
     
+}
+
+#pragma - TableView Delegate Methods
+-(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [searchResultsArray count];
+}
+
+-(UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"Cell";
+
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
+    cell.textLabel.text = ((CityList *)[searchResultsArray objectAtIndex:indexPath.row]).name;
+    
+    if([_previousCell.textLabel.text isEqualToString:cell.textLabel.text])
+    {
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    }
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    _previousCell.accessoryType=UITableViewCellAccessoryNone;
+    _previousCell=cell;
+    cell.accessoryType=UITableViewCellAccessoryCheckmark;
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [tableView reloadData];
 }
 /*
 #pragma mark - Navigation

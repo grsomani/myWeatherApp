@@ -32,18 +32,27 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="qCR-WJ-pOI">
-                                <rect key="frame" x="512" y="502" width="256" height="21"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Hxy-i8-2xF">
+                                <rect key="frame" x="657" y="498" width="35" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <state key="normal" title="o o o">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zMR-fH-Pe1">
+                                <rect key="frame" x="326" y="497" width="117" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Add Location">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="LoV-uF-Fq0"/>
                     <connections>
-                        <outlet property="moreDetailsLabel" destination="qCR-WJ-pOI" id="GZQ-pB-UK0"/>
+                        <outlet property="addLocationBtn" destination="zMR-fH-Pe1" id="Nfu-bM-Kqw"/>
+                        <outlet property="moreDetailsBtn" destination="Hxy-i8-2xF" id="xbj-u9-ZdF"/>
                         <outlet property="tempMinMaxLabel" destination="FBk-uj-GFI" id="qOO-HK-SU2"/>
                         <outlet property="temperatureLabel" destination="UPu-dF-9Y5" id="PaZ-4M-TfY"/>
                         <outlet property="weatherDescLabel" destination="CPe-Zx-4Jz" id="lhg-gp-q9K"/>
@@ -119,6 +128,15 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Vt6-UB-Kl2">
+                                <rect key="frame" x="0.0" y="64" width="768" height="960"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="VEP-uE-Lm9" id="gUA-Vw-FQs"/>
+                                    <outlet property="delegate" destination="VEP-uE-Lm9" id="npb-BH-0Gr"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -127,6 +145,7 @@
                     <connections>
                         <outlet property="addButton" destination="s9S-tK-qKG" id="2Ec-mB-4Eq"/>
                         <outlet property="doneButton" destination="ede-lf-wwT" id="vFE-ry-40G"/>
+                        <outlet property="locationTable" destination="Vt6-UB-Kl2" id="qee-C6-UYq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w0N-ZV-04H" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -150,6 +169,10 @@
                                 <rect key="frame" x="0.0" y="88" width="768" height="944"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="2eb-if-S8p" id="I1Z-6o-Rmc"/>
+                                    <outlet property="delegate" destination="2eb-if-S8p" id="f5u-MA-hnk"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>

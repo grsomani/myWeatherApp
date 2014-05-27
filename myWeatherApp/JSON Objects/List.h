@@ -13,7 +13,7 @@
 @interface List : NSObject
 
 @property (strong, nonatomic) NSString *dt;
-@property (strong, nonatomic) NSDictionary *temp;
+@property (strong, nonatomic) Temperature *temp;
 @property (strong, nonatomic) NSString *pressure;
 @property (strong, nonatomic) NSString *humidity;
 @property (strong, nonatomic) NSArray *weather;

@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LocationSearchViewController.h"
 
-@interface LocationsViewController : UIViewController
+@interface LocationsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, LocationAddedDelegate>
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
+@property (weak, nonatomic) IBOutlet UITableView *locationTable;
 
 @end

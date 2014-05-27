@@ -7,13 +7,16 @@
 //
 
 #import "LocationsViewController.h"
-#import "LocationSearchViewController.h"
 #import "UILocationSearchNavViewController.h"
+#import "CitiesSaved.h"
+
 @interface LocationsViewController ()
 
 @end
 
 @implementation LocationsViewController
+
+NSArray *citiesList;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -30,10 +33,17 @@
     // Do any additional setup after loading the view.
 }
 
+- (void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    citiesList = [NSArray arrayWithArray:[[AppContext sharedAppContext] getSavedCities]];
+}
+
 - (IBAction)addButtonPressed:(UIBarButtonItem *)sender
 {
     LocationSearchViewController *viewController =[[LocationSearchViewController alloc] init];
     viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"LocationSearch"];
+    viewController.delegate = self;
     UINavigationController *navigationController = [[UILocationSearchNavViewController alloc]initWithRootViewController:viewController ];
     navigationController.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentViewController:navigationController animated:YES completion:nil];
@@ -50,6 +60,29 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void) locationAdded
+{
+    citiesList = [NSArray arrayWithArray:[[AppContext sharedAppContext] getSavedCities]];
+    [self.locationTable reloadData];
+}
+
+#pragma mark - UITableView Delegate Methods
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [citiesList count];
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *cellIdentifier = @"cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if(cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    }
+    cell.textLabel.text = ((CitiesSaved *)[citiesList objectAtIndex:indexPath.row]).name;
+    return cell;
+}
 /*
 #pragma mark - Navigation
 

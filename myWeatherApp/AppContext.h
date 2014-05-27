@@ -1,12 +1,13 @@
 //
-//  FetchAndParseJSON.h
+//  AppContext.h
 //  myWeatherApp
 //
-//  Created by Ganesh Somani on 5/22/14.
+//  Created by Ganesh Somani on 5/26/14.
 //  Copyright (c) 2014 test. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+
 
 @protocol WebRequestDelegate <NSObject>
 
@@ -15,13 +16,18 @@
 
 @end
 
-@interface FetchAndParseJSON : NSObject
+@interface AppContext : NSObject
 
 @property (nonatomic, assign) id <WebRequestDelegate> delegate;
 
-+(FetchAndParseJSON *)sharedFetchAndParseJSON;
++(AppContext *)sharedAppContext;
 - (void)getWeatherDataForCity:(NSString *)cityName;
 - (void)getCityListForKeyword:(NSString *)keyword;
+
+- (void)saveNewCity:(NSString *)cityName;
+- (NSArray *)getSavedCities;
+
+- (void)saveCityWeatherForecast;
 
 @property (strong, nonatomic) NSArray *cityWeatherArray;
 @property (strong, nonatomic) NSArray *searchCityList;

@@ -57,10 +57,27 @@ CLLocationManager *locationManager;
 
 -(void) viewWillAppear:(BOOL)animated
 {
-//    [FetchAndParseJSON sharedFetchAndParseJSON].delegate=self;
-//    [[FetchAndParseJSON sharedFetchAndParseJSON] getWeatherDataForCity:@"Pune"];
+    [AppContext sharedAppContext].delegate=self;
+    NSArray *totalCities = [[AppContext sharedAppContext] getSavedCities];
+    if([totalCities count] == 0)
+    {
+        //Show add Locations Button
+        self.temperatureLabel.hidden=YES;
+        self.weatherDescLabel.hidden=YES;
+        self.tempMinMaxLabel.hidden=YES;
+        self.moreDetailsBtn.hidden=YES;
+        
+        self.addLocationBtn.hidden=NO;
+        [self.addLocationBtn addTarget:self action:@selector(bringLocationView) forControlEvents:UIControlEventTouchDown];
+    }
+    else
+    {
+        //Get Last Selected City
+        self.addLocationBtn.hidden=YES;
+        [self.temperatureLabel setText:@"Loading.."];
+    }
+//    [[AppContext sharedAppContext] getWeatherDataForCity:@"Pune"];
     
-    [self.temperatureLabel setText:@"Loading.."];
 }
 
 -(void) viewDidAppear:(BOOL)animated
@@ -181,7 +198,7 @@ CLLocationManager *locationManager;
     {
         [self.temperatureLabel setText:[NSString stringWithFormat:@"%.02f%@C",[[probablyTodayList.temp valueForKey:@"day"] floatValue]-273.15, @"\u00B0" ] ];
         [self.weatherDescLabel setText:[[probablyTodayList.weather objectAtIndex:0] valueForKey:@"description"]];
-        [self.tempMinMaxLabel setText:[NSString stringWithFormat:@"Min : %.02f%@C Max : %.02f%@C",[[probablyTodayList.temp valueForKey:@"min"] floatValue]-273.15, @"\u00B0", [[probablyTodayList.temp valueForKey:@"max"] floatValue]-273.15, @"\u00B0" ]];
+        [self.tempMinMaxLabel setText:[NSString stringWithFormat:@"Min : %.02f%@C Max : %.02f%@C",[[probablyTodayList valueForKeyPath:@"temp.min"] floatValue]-273.15, @"\u00B0", [[probablyTodayList valueForKeyPath:@"temp.max"] floatValue]-273.15, @"\u00B0" ]];
     }
 }
 
