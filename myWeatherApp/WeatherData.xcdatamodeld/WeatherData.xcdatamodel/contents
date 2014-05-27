@@ -2,7 +2,7 @@
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="12F45" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="CitiesSaved" representedClassName="CitiesSaved" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="city_weather" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="WeatherList" syncable="YES"/>
+        <relationship name="city_weather" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WeatherList" syncable="YES"/>
     </entity>
     <entity name="CityTemperature" representedClassName="CityTemperature" syncable="YES">
         <attribute name="day" optional="YES" attributeType="String" syncable="YES"/>
@@ -21,11 +21,11 @@
         <attribute name="rain" optional="YES" attributeType="String" defaultValueString="nil" syncable="YES"/>
         <attribute name="speed" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="weather" optional="YES" attributeType="Transformable" syncable="YES"/>
-        <relationship name="city_temp" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CityTemperature" syncable="YES"/>
+        <relationship name="city_temp" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CityTemperature" syncable="YES"/>
     </entity>
     <elements>
-        <element name="WeatherList" positionX="-108" positionY="18" width="128" height="178"/>
-        <element name="CitiesSaved" positionX="-317" positionY="-9" width="128" height="73"/>
+        <element name="CitiesSaved" positionX="-317" positionY="-9" width="128" height="75"/>
         <element name="CityTemperature" positionX="-207" positionY="54" width="128" height="133"/>
+        <element name="WeatherList" positionX="-108" positionY="18" width="128" height="180"/>
     </elements>
 </model>

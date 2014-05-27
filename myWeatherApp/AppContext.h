@@ -21,13 +21,16 @@
 @property (nonatomic, assign) id <WebRequestDelegate> delegate;
 
 +(AppContext *)sharedAppContext;
-- (void)getWeatherDataForCity:(NSString *)cityName;
-- (void)getCityListForKeyword:(NSString *)keyword;
+- (void)fetchWeatherDataForCity:(NSString *)cityName;
+- (void)fetchCityListForKeyword:(NSString *)keyword;
 
 - (void)saveNewCity:(NSString *)cityName;
+-(void) deleteCity:(NSString *)cityName;
+
 - (NSArray *)getSavedCities;
 
-- (void)saveCityWeatherForecast;
+- (void)saveCityWeatherForecastForCity:(NSString *) cityName;
+- (void)getWeatherDataForCity:(NSString *)cityName;
 
 @property (strong, nonatomic) NSArray *cityWeatherArray;
 @property (strong, nonatomic) NSArray *searchCityList;

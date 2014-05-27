@@ -71,7 +71,7 @@ NSArray *searchResultsArray;
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar;                     // called when keyboard search button pressed
 {
     [AppContext sharedAppContext].delegate=self;
-    [[AppContext sharedAppContext] getCityListForKeyword:searchBar.text];
+    [[AppContext sharedAppContext] fetchCityListForKeyword:searchBar.text];
     [self.searchBar resignFirstResponder];
 }
 
@@ -83,7 +83,7 @@ NSArray *searchResultsArray;
 }
 -(void)didFailedToFetchJSONData:(NSError *)error
 {
-    
+    NSLog(@"Failed to Search due to %@",error.description);
 }
 
 #pragma - TableView Delegate Methods

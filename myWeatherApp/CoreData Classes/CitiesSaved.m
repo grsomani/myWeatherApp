@@ -15,4 +15,8 @@
 @dynamic name;
 @dynamic city_weather;
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%@ %@", self.name, self.city_weather];
+}
 @end

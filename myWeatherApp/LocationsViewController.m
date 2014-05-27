@@ -9,6 +9,7 @@
 #import "LocationsViewController.h"
 #import "UILocationSearchNavViewController.h"
 #import "CitiesSaved.h"
+#import "WeatherList.h"
 
 @interface LocationsViewController ()
 
@@ -16,7 +17,7 @@
 
 @implementation LocationsViewController
 
-NSArray *citiesList;
+NSMutableArray *citiesList;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -36,7 +37,7 @@ NSArray *citiesList;
 - (void) viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    citiesList = [NSArray arrayWithArray:[[AppContext sharedAppContext] getSavedCities]];
+    citiesList = [NSMutableArray arrayWithArray:[[AppContext sharedAppContext] getSavedCities]];
 }
 
 - (IBAction)addButtonPressed:(UIBarButtonItem *)sender
@@ -63,12 +64,20 @@ NSArray *citiesList;
 -(void) locationAdded
 {
     citiesList = [NSArray arrayWithArray:[[AppContext sharedAppContext] getSavedCities]];
+    if ([citiesList count] == 1) {
+        [[NSUserDefaults standardUserDefaults] setObject:((CitiesSaved *)[citiesList objectAtIndex:0]).name forKey:@"selectedCity"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
     [self.locationTable reloadData];
 }
 
 #pragma mark - UITableView Delegate Methods
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if([citiesList count])
+    {
+        [self.locationTable setEditing:YES];
+    }
     return [citiesList count];
 }
 
@@ -82,6 +91,20 @@ NSArray *citiesList;
     }
     cell.textLabel.text = ((CitiesSaved *)[citiesList objectAtIndex:indexPath.row]).name;
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        [citiesList removeObjectAtIndex:indexPath.row];
+        [[AppContext sharedAppContext] deleteCity:cell.textLabel.text];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationTop];
+        [tableView endUpdates];
+        [tableView reloadData];
+    }
 }
 /*
 #pragma mark - Navigation

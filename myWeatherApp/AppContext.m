@@ -12,6 +12,7 @@
 #import "CityList.h"
 #import "WeatherList.h"
 #import "CityTemperature.h"
+#import "CitiesSaved.h"
 
 #define API_KEY @"xxxx"
 
@@ -37,7 +38,7 @@
     return [(AppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
 }
 
-- (void)getWeatherDataForCity:(NSString *)cityName
+- (void)fetchWeatherDataForCity:(NSString *)cityName
 {
     NSString *urlAsString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/forecast/daily?q=%@&cnt=14&APPID=%@",  cityName, API_KEY];
     NSURL *url = [[NSURL alloc] initWithString:urlAsString];
@@ -47,12 +48,12 @@
         if (error) {
             [self.delegate didFailedToFetchJSONData:error];
         } else {
-            [self parseWeatherJSONData:data];
+            [self parseWeatherJSONData:data forCity:cityName];
         }
     }];
 }
 
--(void)getCityListForKeyword:(NSString *)keyword
+-(void)fetchCityListForKeyword:(NSString *)keyword
 {
     NSString *urlAsString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/find?q=%@&type=like&mode=json&APPID=%@",  keyword, API_KEY];
     NSURL *url = [[NSURL alloc] initWithString:urlAsString];
@@ -67,7 +68,7 @@
     }];
 }
 
-- (void) parseWeatherJSONData:(NSData *)data
+- (void) parseWeatherJSONData:(NSData *)data forCity:(NSString *) cityName
 {
     NSError *localError;
     NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&localError];
@@ -129,8 +130,7 @@
     self.cityWeatherArray = [NSArray arrayWithArray:listArray];
     if(self.cityWeatherArray)
     {
-        [self.delegate didSucceedToFetchJSONData:self.cityWeatherArray];
-        [self saveCityWeatherForecast];
+        [self saveCityWeatherForecastForCity:cityName];
     }
 }
 
@@ -178,6 +178,22 @@
     }
 }
 
+-(void) deleteCity:(NSString *)cityName
+{
+    NSError *error;
+    NSFetchRequest* request = [[NSFetchRequest alloc] initWithEntityName:@"CitiesSaved"];
+    NSPredicate *query = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"name='%@'",cityName]];
+    [request setPredicate:query];
+    NSArray *citiesArray = [[self sharedManagedObjectContext] executeFetchRequest:request error:&error];
+    if ([citiesArray count]) {
+        [[self sharedManagedObjectContext] deleteObject:[citiesArray objectAtIndex:0]];
+    }
+    else
+    {
+        NSLog(@"%@ does not exists",cityName);
+    }
+}
+
 -(NSArray *)getSavedCities
 {
     NSFetchRequest* request = [[NSFetchRequest alloc] initWithEntityName:@"CitiesSaved"];
@@ -190,13 +206,14 @@
     return sortedArray;
 }
 
-/*
- @property (strong, nonatomic) NSString *deg;
- 
- */
--(void) saveCityWeatherForecast
+-(void) saveCityWeatherForecastForCity:(NSString *) cityName
 {
     NSError *error;
+    NSFetchRequest* request = [[NSFetchRequest alloc] initWithEntityName:@"CitiesSaved"];
+    NSPredicate *query = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"name='%@'",cityName]];
+    [request setPredicate:query];
+    NSArray *citiesArray = [[self sharedManagedObjectContext] executeFetchRequest:request error:&error];
+    
     for(List *daysWeather in self.cityWeatherArray)
     {
         NSManagedObject *object = (WeatherList *)[NSEntityDescription insertNewObjectForEntityForName:@"WeatherList"                                                       inManagedObjectContext:[self sharedManagedObjectContext]];
@@ -209,7 +226,6 @@
         [object setValue:daysWeather.weather forKey:@"weather"];
         [object setValue:daysWeather.deg forKey:@"deg"];
         
-//        for (Temperature *cityTemp in daysWeather.temp)
         Temperature *cityTemp = daysWeather.temp;
         {
             CityTemperature *city_temp = (CityTemperature *)[NSEntityDescription insertNewObjectForEntityForName:@"CityTemperature" inManagedObjectContext:[self sharedManagedObjectContext]];
@@ -222,12 +238,72 @@
             
             [object setValue:city_temp forKey:@"city_temp"];
         }
-
-
-
-    if (![[self sharedManagedObjectContext] save:&error]) {
-        NSLog(@"Failed to save - error: %@", [error localizedDescription]);
+        
+        if([citiesArray count])
+        {
+            NSManagedObject* cityObj = [citiesArray objectAtIndex:0];
+            [(CitiesSaved *)cityObj addCity_weatherObject:(WeatherList *)object];
+        }
+        
+        if (![[self sharedManagedObjectContext] save:&error]) {
+            NSLog(@"Failed to save - error: %@", [error localizedDescription]);
+        }
+        else
+        {
+            //Save Data Successfull, Now this Method Call Should return the latest Saved Data
+            [self getWeatherDataForCity:cityName];
+        }
     }
+}
+
+- (void)getWeatherDataForCity:(NSString *)cityName
+{
+    NSError *error;
+    NSFetchRequest* request = [[NSFetchRequest alloc] initWithEntityName:@"CitiesSaved"];
+    NSPredicate *query = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"name='%@'",cityName]];
+    [request setPredicate:query];
+    NSArray *citiesArray = [[self sharedManagedObjectContext] executeFetchRequest:request error:&error];
+    if([citiesArray count])
+    {
+        //Data Exists Already in DB
+        NSArray *weatherArray = (NSArray *)((CitiesSaved *)[citiesArray objectAtIndex:0]).city_weather;
+        if([weatherArray count])
+        {
+            NSSortDescriptor *dateSorter = [[NSSortDescriptor alloc] initWithKey:@"dt" ascending:YES];
+            NSArray *sortedArray = [weatherArray sortedArrayUsingDescriptors:[NSArray arrayWithObject:dateSorter]];
+            
+            WeatherList *probablyTodayList = (WeatherList *)[sortedArray objectAtIndex:0];
+            NSDate *webDate = [NSDate dateWithTimeIntervalSince1970:[probablyTodayList.dt doubleValue]];
+            NSDate *today = [NSDate date];
+            
+            [[NSCalendar currentCalendar] rangeOfUnit:NSDayCalendarUnit startDate:&webDate interval:NULL forDate:[NSDate date]];
+            [[NSCalendar currentCalendar] rangeOfUnit:NSDayCalendarUnit startDate:&today interval:NULL forDate:[NSDate date]];
+            
+            if( [webDate isEqualToDate:today] )
+            {
+                //Data Not Stale
+                if([self.delegate respondsToSelector:@selector(didSucceedToFetchJSONData:)])
+                {
+                    [self.delegate didSucceedToFetchJSONData:sortedArray];
+                }
+            }
+            else
+            {
+                //Stale Data, delete old data, fetch Latest and Save it
+                [[self sharedManagedObjectContext] deleteObject:[citiesArray objectAtIndex:0]];
+                [self saveNewCity:cityName];
+                [self fetchWeatherDataForCity:cityName];
+            }
+        }
+        else
+        {
+            //No weather Data in Core Data and Need to fetch it from Server
+            [self fetchWeatherDataForCity:cityName];
+        }
+    }
+    else
+    {
+        NSLog(@"City Not Selected By User");
     }
 }
 

@@ -10,7 +10,8 @@
 #import "PageContentViewController.h"
 #import "CitysCompleteForecastViewController.h"
 #import "LocationsViewController.h"
-#import "List.h"
+#import "WeatherList.h"
+#import "CityTemperature.h"
 
 @interface ViewController ()
 
@@ -59,6 +60,8 @@ CLLocationManager *locationManager;
 {
     [AppContext sharedAppContext].delegate=self;
     NSArray *totalCities = [[AppContext sharedAppContext] getSavedCities];
+    self.moreDetailsBtn.hidden=YES;
+
     if([totalCities count] == 0)
     {
         //Show add Locations Button
@@ -68,16 +71,27 @@ CLLocationManager *locationManager;
         self.moreDetailsBtn.hidden=YES;
         
         self.addLocationBtn.hidden=NO;
-        [self.addLocationBtn addTarget:self action:@selector(bringLocationView) forControlEvents:UIControlEventTouchDown];
+        [self.view bringSubviewToFront:self.addLocationBtn];
+        [self.addLocationBtn addTarget:self action:@selector(bringLocationView) forControlEvents:UIControlEventTouchUpInside];
     }
     else
     {
         //Get Last Selected City
         self.addLocationBtn.hidden=YES;
-        [self.temperatureLabel setText:@"Loading.."];
+        
+        self.temperatureLabel.hidden=NO;
+        self.weatherDescLabel.hidden=NO;
+        self.tempMinMaxLabel.hidden=NO;
+        
+        NSString *selectedCityName = [NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedCity"]];
+        if(selectedCityName != nil)
+        {
+            [self.temperatureLabel setText:@"Loading.."];
+            [self.weatherDescLabel setText:@""];
+            [self.tempMinMaxLabel setText:@""];
+            [[AppContext sharedAppContext] getWeatherDataForCity:selectedCityName];
+        }
     }
-//    [[AppContext sharedAppContext] getWeatherDataForCity:@"Pune"];
-    
 }
 
 -(void) viewDidAppear:(BOOL)animated
@@ -187,18 +201,12 @@ CLLocationManager *locationManager;
 #pragma mark - WebService Delegate Methods
 -(void)didSucceedToFetchJSONData:(NSArray *)cityWeatherArray
 {
-    List *probablyTodayList = (List *)[cityWeatherArray objectAtIndex:0];
-    NSDate *webDate = [NSDate dateWithTimeIntervalSince1970:[probablyTodayList.dt doubleValue]];
-    NSDate *today = [NSDate date];
-    
-    [[NSCalendar currentCalendar] rangeOfUnit:NSDayCalendarUnit startDate:&webDate interval:NULL forDate:[NSDate date]];
-    [[NSCalendar currentCalendar] rangeOfUnit:NSDayCalendarUnit startDate:&today interval:NULL forDate:[NSDate date]];
-
-    if( [webDate isEqualToDate:today] )
+    WeatherList *probablyTodayList = (WeatherList *)[cityWeatherArray objectAtIndex:0];
     {
-        [self.temperatureLabel setText:[NSString stringWithFormat:@"%.02f%@C",[[probablyTodayList.temp valueForKey:@"day"] floatValue]-273.15, @"\u00B0" ] ];
+        [self.temperatureLabel setText:[NSString stringWithFormat:@"%.02f%@C",[[probablyTodayList.city_temp valueForKey:@"day"] floatValue]-273.15, @"\u00B0" ] ];
         [self.weatherDescLabel setText:[[probablyTodayList.weather objectAtIndex:0] valueForKey:@"description"]];
-        [self.tempMinMaxLabel setText:[NSString stringWithFormat:@"Min : %.02f%@C Max : %.02f%@C",[[probablyTodayList valueForKeyPath:@"temp.min"] floatValue]-273.15, @"\u00B0", [[probablyTodayList valueForKeyPath:@"temp.max"] floatValue]-273.15, @"\u00B0" ]];
+        [self.tempMinMaxLabel setText:[NSString stringWithFormat:@"Min : %.02f%@C Max : %.02f%@C",[[probablyTodayList valueForKeyPath:@"city_temp.min"] floatValue]-273.15, @"\u00B0", [[probablyTodayList valueForKeyPath:@"city_temp.max"] floatValue]-273.15, @"\u00B0" ]];
+        self.moreDetailsBtn.hidden=NO;
     }
 }
 
