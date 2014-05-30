@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="12F45" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="CitiesSaved" representedClassName="CitiesSaved" syncable="YES">
+        <attribute name="cityID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="city_weather" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="WeatherList" syncable="YES"/>
     </entity>
@@ -24,7 +25,7 @@
         <relationship name="city_temp" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CityTemperature" syncable="YES"/>
     </entity>
     <elements>
-        <element name="CitiesSaved" positionX="-317" positionY="-9" width="128" height="75"/>
+        <element name="CitiesSaved" positionX="-317" positionY="-9" width="128" height="90"/>
         <element name="CityTemperature" positionX="-207" positionY="54" width="128" height="133"/>
         <element name="WeatherList" positionX="-108" positionY="18" width="128" height="180"/>
     </elements>

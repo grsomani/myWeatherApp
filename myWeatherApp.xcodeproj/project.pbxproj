@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		1F04CFCC192C875E002516D2 /* PageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F04CFCB192C875E002516D2 /* PageContentViewController.m */; };
+		1F078DFD1935C5D2007660EC /* setting@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F078DFC1935C5D2007660EC /* setting@2x.png */; };
+		1F078E001935C5F5007660EC /* filter.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F078DFE1935C5F5007660EC /* filter.png */; };
+		1F078E011935C5F5007660EC /* filter@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F078DFF1935C5F5007660EC /* filter@2x.png */; };
 		1F129A2619333F8B00BAD7CE /* AppContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F129A2519333F8B00BAD7CE /* AppContext.m */; };
 		1F129A2F1933730200BAD7CE /* CitiesSaved.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F129A2E1933730200BAD7CE /* CitiesSaved.m */; };
 		1F129A351933735800BAD7CE /* CityTemperature.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F129A341933735800BAD7CE /* CityTemperature.m */; };
@@ -16,6 +19,11 @@
 		1F319F95192F5A85005988AB /* UILocationSearchNavViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F319F94192F5A85005988AB /* UILocationSearchNavViewController.m */; };
 		1F319F98192F6082005988AB /* WeatherData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1F319F96192F6082005988AB /* WeatherData.xcdatamodeld */; };
 		1F319FDC192F6394005988AB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F319FDB192F6394005988AB /* CoreData.framework */; };
+		1F37C3491937157200DAE494 /* ForecastCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F37C3471937157200DAE494 /* ForecastCell.m */; };
+		1F37C34A1937157200DAE494 /* ForecastCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F37C3481937157200DAE494 /* ForecastCell.xib */; };
+		1F3FF41719375FDC005E37BA /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3FF41619375FDC005E37BA /* MBProgressHUD.m */; };
+		1F3FF41C1937710B005E37BA /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3FF41B1937710B005E37BA /* Reachability.m */; };
+		1F3FF41E1937712B005E37BA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F3FF41D1937712A005E37BA /* SystemConfiguration.framework */; };
 		1F4F6897192DD7F200AA0DE0 /* Temperature.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4F6896192DD7F200AA0DE0 /* Temperature.m */; };
 		1F4F689B192DD8A700AA0DE0 /* Weather.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4F689A192DD8A700AA0DE0 /* Weather.m */; };
 		1F4F689E192DD90200AA0DE0 /* List.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F4F689D192DD90200AA0DE0 /* List.m */; };
@@ -38,6 +46,7 @@
 		1F612D15192CC8AE00E691FF /* setting.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F612D14192CC8AE00E691FF /* setting.png */; };
 		1F755899192CD0AE00DB3D21 /* LocationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F755898192CD0AE00DB3D21 /* LocationsViewController.m */; };
 		1F75589D192CD64D00DB3D21 /* LocationSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F75589C192CD64D00DB3D21 /* LocationSearchViewController.m */; };
+		1F965FCA1938B0010041CD4C /* MoreDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F965FC91938B0010041CD4C /* MoreDetailViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +62,9 @@
 /* Begin PBXFileReference section */
 		1F04CFCA192C875E002516D2 /* PageContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageContentViewController.h; sourceTree = "<group>"; };
 		1F04CFCB192C875E002516D2 /* PageContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageContentViewController.m; sourceTree = "<group>"; };
+		1F078DFC1935C5D2007660EC /* setting@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setting@2x.png"; sourceTree = "<group>"; };
+		1F078DFE1935C5F5007660EC /* filter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = filter.png; sourceTree = "<group>"; };
+		1F078DFF1935C5F5007660EC /* filter@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "filter@2x.png"; sourceTree = "<group>"; };
 		1F129A2419333F8B00BAD7CE /* AppContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppContext.h; path = myWeatherApp/AppContext.h; sourceTree = "<group>"; };
 		1F129A2519333F8B00BAD7CE /* AppContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppContext.m; path = myWeatherApp/AppContext.m; sourceTree = "<group>"; };
 		1F129A2D1933730200BAD7CE /* CitiesSaved.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CitiesSaved.h; path = "CoreData Classes/CitiesSaved.h"; sourceTree = "<group>"; };
@@ -67,6 +79,14 @@
 		1F319F94192F5A85005988AB /* UILocationSearchNavViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILocationSearchNavViewController.m; sourceTree = "<group>"; };
 		1F319F97192F6082005988AB /* WeatherData.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = WeatherData.xcdatamodel; sourceTree = "<group>"; };
 		1F319FDB192F6394005988AB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		1F37C3461937157200DAE494 /* ForecastCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForecastCell.h; sourceTree = "<group>"; };
+		1F37C3471937157200DAE494 /* ForecastCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForecastCell.m; sourceTree = "<group>"; };
+		1F37C3481937157200DAE494 /* ForecastCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForecastCell.xib; sourceTree = "<group>"; };
+		1F3FF41519375FDC005E37BA /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = "Progress Spinner/MBProgressHUD.h"; sourceTree = "<group>"; };
+		1F3FF41619375FDC005E37BA /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = "Progress Spinner/MBProgressHUD.m"; sourceTree = "<group>"; };
+		1F3FF41A1937710B005E37BA /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Reachability/Reachability.h; sourceTree = "<group>"; };
+		1F3FF41B1937710B005E37BA /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Reachability/Reachability.m; sourceTree = "<group>"; };
+		1F3FF41D1937712A005E37BA /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		1F4F6895192DD7F200AA0DE0 /* Temperature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Temperature.h; path = "JSON Objects/Temperature.h"; sourceTree = "<group>"; };
 		1F4F6896192DD7F200AA0DE0 /* Temperature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Temperature.m; path = "JSON Objects/Temperature.m"; sourceTree = "<group>"; };
 		1F4F6899192DD8A700AA0DE0 /* Weather.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Weather.h; path = "JSON Objects/Weather.h"; sourceTree = "<group>"; };
@@ -100,6 +120,8 @@
 		1F755898192CD0AE00DB3D21 /* LocationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationsViewController.m; sourceTree = "<group>"; };
 		1F75589B192CD64D00DB3D21 /* LocationSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationSearchViewController.h; sourceTree = "<group>"; };
 		1F75589C192CD64D00DB3D21 /* LocationSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationSearchViewController.m; sourceTree = "<group>"; };
+		1F965FC81938B0010041CD4C /* MoreDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoreDetailViewController.h; sourceTree = "<group>"; };
+		1F965FC91938B0010041CD4C /* MoreDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreDetailViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F3FF41E1937712B005E37BA /* SystemConfiguration.framework in Frameworks */,
 				1F319FDC192F6394005988AB /* CoreData.framework in Frameworks */,
 				1F612D0F192CAFE800E691FF /* CoreLocation.framework in Frameworks */,
 				1F5783EE192B6E8000F22C87 /* CoreGraphics.framework in Frameworks */,
@@ -139,10 +162,13 @@
 				1F755898192CD0AE00DB3D21 /* LocationsViewController.m */,
 				1F75589B192CD64D00DB3D21 /* LocationSearchViewController.h */,
 				1F75589C192CD64D00DB3D21 /* LocationSearchViewController.m */,
-				1F5E2A4C192F1B42000C91E1 /* CitysCompleteForecastViewController.h */,
-				1F5E2A4D192F1B42000C91E1 /* CitysCompleteForecastViewController.m */,
 				1F319F93192F5A85005988AB /* UILocationSearchNavViewController.h */,
 				1F319F94192F5A85005988AB /* UILocationSearchNavViewController.m */,
+				1F5E2A4C192F1B42000C91E1 /* CitysCompleteForecastViewController.h */,
+				1F5E2A4D192F1B42000C91E1 /* CitysCompleteForecastViewController.m */,
+				1F965FCC1938B01A0041CD4C /* Forecast Cell */,
+				1F965FC81938B0010041CD4C /* MoreDetailViewController.h */,
+				1F965FC91938B0010041CD4C /* MoreDetailViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -169,6 +195,33 @@
 				1F129A2519333F8B00BAD7CE /* AppContext.m */,
 			);
 			name = "Application Specific";
+			sourceTree = "<group>";
+		};
+		1F3FF41319375D38005E37BA /* Third Party */ = {
+			isa = PBXGroup;
+			children = (
+				1F3FF419193770F8005E37BA /* Reachability */,
+				1F3FF418193770E9005E37BA /* Progress Spinner */,
+			);
+			name = "Third Party";
+			sourceTree = "<group>";
+		};
+		1F3FF418193770E9005E37BA /* Progress Spinner */ = {
+			isa = PBXGroup;
+			children = (
+				1F3FF41519375FDC005E37BA /* MBProgressHUD.h */,
+				1F3FF41619375FDC005E37BA /* MBProgressHUD.m */,
+			);
+			name = "Progress Spinner";
+			sourceTree = "<group>";
+		};
+		1F3FF419193770F8005E37BA /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				1F3FF41A1937710B005E37BA /* Reachability.h */,
+				1F3FF41B1937710B005E37BA /* Reachability.m */,
+			);
+			name = Reachability;
 			sourceTree = "<group>";
 		};
 		1F4F6894192DD7B400AA0DE0 /* JSON Objects */ = {
@@ -209,6 +262,7 @@
 		1F5783EA192B6E8000F22C87 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F3FF41D1937712A005E37BA /* SystemConfiguration.framework */,
 				1F319FDB192F6394005988AB /* CoreData.framework */,
 				1F612D0E192CAFE800E691FF /* CoreLocation.framework */,
 				1F5783EB192B6E8000F22C87 /* Foundation.framework */,
@@ -222,6 +276,7 @@
 		1F5783F1192B6E8000F22C87 /* myWeatherApp */ = {
 			isa = PBXGroup;
 			children = (
+				1F3FF41319375D38005E37BA /* Third Party */,
 				1F129A1C193339B200BAD7CE /* Coredata Classes */,
 				1F4F6894192DD7B400AA0DE0 /* JSON Objects */,
 				1F04CFCD192C8766002516D2 /* ViewControllers */,
@@ -237,6 +292,9 @@
 			children = (
 				1F319F96192F6082005988AB /* WeatherData.xcdatamodeld */,
 				1F612D14192CC8AE00E691FF /* setting.png */,
+				1F078DFC1935C5D2007660EC /* setting@2x.png */,
+				1F078DFE1935C5F5007660EC /* filter.png */,
+				1F078DFF1935C5F5007660EC /* filter@2x.png */,
 				1F5783F3192B6E8000F22C87 /* myWeatherApp-Info.plist */,
 				1F5783F4192B6E8000F22C87 /* InfoPlist.strings */,
 				1F5783F7192B6E8000F22C87 /* main.m */,
@@ -261,6 +319,16 @@
 				1F578413192B6E8000F22C87 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1F965FCC1938B01A0041CD4C /* Forecast Cell */ = {
+			isa = PBXGroup;
+			children = (
+				1F37C3461937157200DAE494 /* ForecastCell.h */,
+				1F37C3471937157200DAE494 /* ForecastCell.m */,
+				1F37C3481937157200DAE494 /* ForecastCell.xib */,
+			);
+			name = "Forecast Cell";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -339,10 +407,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F37C34A1937157200DAE494 /* ForecastCell.xib in Resources */,
 				1F578404192B6E8000F22C87 /* Images.xcassets in Resources */,
+				1F078E001935C5F5007660EC /* filter.png in Resources */,
 				1F5783F6192B6E8000F22C87 /* InfoPlist.strings in Resources */,
 				1F5783FF192B6E8000F22C87 /* Main.storyboard in Resources */,
 				1F612D15192CC8AE00E691FF /* setting.png in Resources */,
+				1F078E011935C5F5007660EC /* filter@2x.png in Resources */,
+				1F078DFD1935C5D2007660EC /* setting@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,18 +433,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F37C3491937157200DAE494 /* ForecastCell.m in Sources */,
 				1F4F6897192DD7F200AA0DE0 /* Temperature.m in Sources */,
 				1F129A2F1933730200BAD7CE /* CitiesSaved.m in Sources */,
 				1F578402192B6E8000F22C87 /* ViewController.m in Sources */,
+				1F965FCA1938B0010041CD4C /* MoreDetailViewController.m in Sources */,
 				1F129A351933735800BAD7CE /* CityTemperature.m in Sources */,
 				1F319F95192F5A85005988AB /* UILocationSearchNavViewController.m in Sources */,
 				1F319F91192F30C4005988AB /* CityList.m in Sources */,
+				1F3FF41719375FDC005E37BA /* MBProgressHUD.m in Sources */,
 				1F04CFCC192C875E002516D2 /* PageContentViewController.m in Sources */,
 				1F4F689E192DD90200AA0DE0 /* List.m in Sources */,
 				1F755899192CD0AE00DB3D21 /* LocationsViewController.m in Sources */,
 				1F4F689B192DD8A700AA0DE0 /* Weather.m in Sources */,
 				1F75589D192CD64D00DB3D21 /* LocationSearchViewController.m in Sources */,
 				1F5E2A4E192F1B42000C91E1 /* CitysCompleteForecastViewController.m in Sources */,
+				1F3FF41C1937710B005E37BA /* Reachability.m in Sources */,
 				1F319F98192F6082005988AB /* WeatherData.xcdatamodeld in Sources */,
 				1F5783FC192B6E8000F22C87 /* AppDelegate.m in Sources */,
 				1F129A3E193382EC00BAD7CE /* WeatherList.m in Sources */,

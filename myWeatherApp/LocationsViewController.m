@@ -16,6 +16,7 @@
 @end
 
 @implementation LocationsViewController
+@synthesize isSelector;
 
 NSMutableArray *citiesList;
 
@@ -32,6 +33,16 @@ NSMutableArray *citiesList;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    if(isSelector)
+    {
+        // Get the reference to the current toolbar buttons
+        NSMutableArray *toolbarButtons = [self.toolbar.items mutableCopy];
+        
+        // This is how you remove the button from the toolbar and animate it
+        [toolbarButtons removeObject:self.addButton];
+        [self.toolbar setItems:toolbarButtons animated:YES];
+   }
 }
 
 - (void) viewWillAppear:(BOOL)animated
@@ -52,6 +63,11 @@ NSMutableArray *citiesList;
 
 - (IBAction)doneButtonPressed:(UIBarButtonItem *)sender
 {
+    if(_previousCell)
+    {
+        [[NSUserDefaults standardUserDefaults] setObject:_previousCell.textLabel.text forKey:@"selectedCity"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -63,7 +79,7 @@ NSMutableArray *citiesList;
 
 -(void) locationAdded
 {
-    citiesList = [NSArray arrayWithArray:[[AppContext sharedAppContext] getSavedCities]];
+    citiesList = [NSMutableArray arrayWithArray:[[AppContext sharedAppContext] getSavedCities]];
     if ([citiesList count] == 1) {
         [[NSUserDefaults standardUserDefaults] setObject:((CitiesSaved *)[citiesList objectAtIndex:0]).name forKey:@"selectedCity"];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -74,7 +90,7 @@ NSMutableArray *citiesList;
 #pragma mark - UITableView Delegate Methods
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if([citiesList count])
+    if([citiesList count] && !isSelector)
     {
         [self.locationTable setEditing:YES];
     }
@@ -90,6 +106,18 @@ NSMutableArray *citiesList;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
     cell.textLabel.text = ((CitiesSaved *)[citiesList objectAtIndex:indexPath.row]).name;
+    cell.accessoryType=UITableViewCellAccessoryNone;
+    if(!_previousCell)
+    {
+        if(isSelector && [cell.textLabel.text isEqualToString:[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedCity"]])
+        {
+            cell.accessoryType=UITableViewCellAccessoryCheckmark;
+        }
+    }
+    else if([_previousCell.textLabel.text isEqualToString:cell.textLabel.text])
+    {
+        cell.accessoryType=UITableViewCellAccessoryCheckmark;
+    }
     return cell;
 }
 
@@ -103,6 +131,15 @@ NSMutableArray *citiesList;
         [[AppContext sharedAppContext] deleteCity:cell.textLabel.text];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil] withRowAnimation:UITableViewRowAnimationTop];
         [tableView endUpdates];
+        [tableView reloadData];
+    }
+}
+
+-(void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(isSelector)
+    {
+        _previousCell = [tableView cellForRowAtIndexPath:indexPath];
         [tableView reloadData];
     }
 }

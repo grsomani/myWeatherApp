@@ -11,8 +11,11 @@
 
 @interface LocationsViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, LocationAddedDelegate>
 
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *addButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 @property (weak, nonatomic) IBOutlet UITableView *locationTable;
+@property (nonatomic, assign) BOOL isSelector;
+@property (strong, nonatomic) UITableViewCell *previousCell;
 
 @end

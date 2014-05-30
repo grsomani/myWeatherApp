@@ -7,14 +7,27 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 
 @protocol LocationAddedDelegate <NSObject>
 
 -(void) locationAdded;
 
 @end
-@interface LocationSearchViewController : UIViewController <WebRequestDelegate, UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>
-
+@interface LocationSearchViewController : UIViewController
+<
+    WebRequestDelegate,
+    UISearchBarDelegate,
+    UITableViewDataSource,
+    UITableViewDelegate,
+    MBProgressHUDDelegate
+>
+{
+    /**
+     Spinner View
+     */
+    MBProgressHUD *HUD;
+}
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) IBOutlet UITableView *searchLocationTable;
 @property (strong, nonatomic) UITableViewCell *previousCell;

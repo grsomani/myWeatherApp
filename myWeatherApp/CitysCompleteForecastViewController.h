@@ -12,5 +12,5 @@
 
 @property NSUInteger pageIndex;
 @property (weak, nonatomic) IBOutlet UITableView *forecastTable;
-
+@property (nonatomic, strong) NSArray *weatherDataArray;
 @end

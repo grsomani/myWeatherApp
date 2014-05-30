@@ -2,7 +2,7 @@
 //  CitiesSaved.m
 //  myWeatherApp
 //
-//  Created by Ganesh Somani on 5/26/14.
+//  Created by Ganesh Somani on 5/30/14.
 //  Copyright (c) 2014 test. All rights reserved.
 //
 
@@ -13,10 +13,7 @@
 @implementation CitiesSaved
 
 @dynamic name;
+@dynamic cityID;
 @dynamic city_weather;
 
-- (NSString *)description
-{
-    return [NSString stringWithFormat:@"%@ %@", self.name, self.city_weather];
-}
 @end

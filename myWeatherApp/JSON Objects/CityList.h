@@ -11,5 +11,5 @@
 @interface CityList : NSObject
 
 @property NSString *name;
-
+@property NSString *cityId;
 @end

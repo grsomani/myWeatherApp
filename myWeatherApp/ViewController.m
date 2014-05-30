@@ -10,8 +10,10 @@
 #import "PageContentViewController.h"
 #import "CitysCompleteForecastViewController.h"
 #import "LocationsViewController.h"
+#import "CitiesSaved.h"
 #import "WeatherList.h"
 #import "CityTemperature.h"
+#import "MoreDetailViewController.h"
 
 @interface ViewController ()
 
@@ -19,12 +21,20 @@
 
 @implementation ViewController
 @synthesize pageViewController = _pageViewController;
+@synthesize moreDetailsPopover;
+
 CLLocationManager *locationManager;
+CitysCompleteForecastViewController* forecastViewController;
+NSArray *comingWeatherArray;
+
+CLGeocoder *geoCoder;
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.edgesForExtendedLayout = UIRectEdgeNone;
+    if([[[UIDevice currentDevice] systemVersion] floatValue] > 7.0)
+        self.edgesForExtendedLayout = UIRectEdgeNone;
 
 	// Do any additional setup after loading the view, typically from a nib.
     
@@ -46,14 +56,20 @@ CLLocationManager *locationManager;
     //Get Location
     locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self;
-    locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
+    locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers;
     
-//    [locationManager startUpdatingLocation];
+    [locationManager startUpdatingLocation];
     
-    UIBarButtonItem *flipButton = [[UIBarButtonItem alloc]
-                                   initWithImage:[UIImage imageNamed:@"setting.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(bringLocationView)];
-    self.navigationItem.rightBarButtonItem = flipButton;
+
     
+    UIBarButtonItem *LocationAdder = [[UIBarButtonItem alloc]
+                                   initWithImage:[UIImage imageNamed:@"setting.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(bringLocationAdderView)];
+    self.navigationItem.rightBarButtonItem = LocationAdder;
+    
+    
+    UIBarButtonItem *LocationSelector = [[UIBarButtonItem alloc]
+                                   initWithImage:[UIImage imageNamed:@"filter.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(bringLocationSelectorView)];
+    self.navigationItem.leftBarButtonItem = LocationSelector;
 }
 
 -(void) viewWillAppear:(BOOL)animated
@@ -61,7 +77,7 @@ CLLocationManager *locationManager;
     [AppContext sharedAppContext].delegate=self;
     NSArray *totalCities = [[AppContext sharedAppContext] getSavedCities];
     self.moreDetailsBtn.hidden=YES;
-
+    
     if([totalCities count] == 0)
     {
         //Show add Locations Button
@@ -69,27 +85,45 @@ CLLocationManager *locationManager;
         self.weatherDescLabel.hidden=YES;
         self.tempMinMaxLabel.hidden=YES;
         self.moreDetailsBtn.hidden=YES;
-        
+        self.cityName.hidden=YES;
+
         self.addLocationBtn.hidden=NO;
         [self.view bringSubviewToFront:self.addLocationBtn];
-        [self.addLocationBtn addTarget:self action:@selector(bringLocationView) forControlEvents:UIControlEventTouchUpInside];
+        [self.addLocationBtn addTarget:self action:@selector(bringLocationAdderView) forControlEvents:UIControlEventTouchUpInside];
     }
     else
     {
         //Get Last Selected City
         self.addLocationBtn.hidden=YES;
-        
+        self.cityName.hidden=YES;
         self.temperatureLabel.hidden=NO;
         self.weatherDescLabel.hidden=NO;
         self.tempMinMaxLabel.hidden=NO;
+        self.cityName.hidden=NO;
         
-        NSString *selectedCityName = [NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedCity"]];
-        if(selectedCityName != nil)
+        if([[NSUserDefaults standardUserDefaults] stringForKey:@"selectedCity"])
+        {
+            NSString *selectedCityName = [NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedCity"]];
+            [self.temperatureLabel setText:@"Loading.."];
+            [self.weatherDescLabel setText:@""];
+            [self.tempMinMaxLabel setText:@""];
+            [self.cityName setText:@""];
+            
+            NSArray *citiesWithName = [[AppContext sharedAppContext] getSavedCityWithName:selectedCityName];
+            if([citiesWithName count])
+                [[AppContext sharedAppContext] getWeatherDataForCity:(CitiesSaved *)[citiesWithName objectAtIndex:0]];
+        }
+        else
         {
             [self.temperatureLabel setText:@"Loading.."];
             [self.weatherDescLabel setText:@""];
             [self.tempMinMaxLabel setText:@""];
-            [[AppContext sharedAppContext] getWeatherDataForCity:selectedCityName];
+            [self.cityName setText:@""];
+            
+            CitiesSaved *firstCityOnList = (CitiesSaved *)[totalCities objectAtIndex:0];
+            [[NSUserDefaults standardUserDefaults] setObject:firstCityOnList.name forKey:@"selectedCity"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            [[AppContext sharedAppContext] getWeatherDataForCity:firstCityOnList];
         }
     }
 }
@@ -99,10 +133,38 @@ CLLocationManager *locationManager;
     [super viewDidAppear:animated];
 }
 
--(void) bringLocationView
+-(void) bringLocationAdderView
 {
     LocationsViewController *locationView = [self.storyboard instantiateViewControllerWithIdentifier:@"LocationsViewController"];
+    locationView.title=@"Manage Cities";
     [self presentViewController:locationView animated:YES completion:nil];
+}
+
+-(void) bringLocationSelectorView
+{
+    LocationsViewController *locationView = [self.storyboard instantiateViewControllerWithIdentifier:@"LocationsViewController"];
+    locationView.title=@"Select City";
+    locationView.isSelector = YES;
+    [self presentViewController:locationView animated:YES completion:nil];
+}
+
+- (IBAction)bringMoreDetails:(UIButton *)sender
+{
+    MoreDetailViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"moredetailsview"];
+    moreDetailsPopover = [[UIPopoverController alloc] initWithContentViewController:viewController];
+
+    if(comingWeatherArray != nil)
+    {
+        WeatherList *TodayList = (WeatherList *)[comingWeatherArray objectAtIndex:0];
+        
+        viewController.pressureValue.text=[TodayList valueForKey:@"pressure"];
+        viewController.windValue.text=[TodayList valueForKey:@"speed"];
+        viewController.humidityValue.text=[TodayList valueForKey:@"humidity"];
+    }
+
+    moreDetailsPopover.delegate = self;
+    moreDetailsPopover.popoverContentSize = CGSizeMake(644, 200); //your custom size.
+    [moreDetailsPopover presentPopoverFromRect:sender.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
@@ -115,10 +177,15 @@ CLLocationManager *locationManager;
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    NSLog(@"didUpdateToLocation: %@", newLocation);
-
-    // Stop Location Manager
+    NSLog(@"Latitude: %f Longitute: %f ", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
     [locationManager stopUpdatingLocation];
+
+    if(![[NSUserDefaults standardUserDefaults] stringForKey:@"selectedCity"])
+    {
+        [[AppContext sharedAppContext] fetchCityListForLat:newLocation.coordinate.latitude andLong:newLocation.coordinate.longitude];
+    }
+    
+    // Stop Location Manager
 }
 
 - (void)didReceiveMemoryWarning
@@ -132,7 +199,7 @@ CLLocationManager *locationManager;
 {
     NSUInteger index;
     if( [viewController isKindOfClass:[CitysCompleteForecastViewController class]])
-        index = ((CitysCompleteForecastViewController*) viewController).pageIndex;
+        index = ((CitysCompleteForecastViewController*) forecastViewController).pageIndex;
     else
         index = ((PageContentViewController*) viewController).pageIndex;
     
@@ -148,9 +215,15 @@ CLLocationManager *locationManager;
 {
     NSUInteger index;
     if( [viewController isKindOfClass:[CitysCompleteForecastViewController class]])
-        index = ((CitysCompleteForecastViewController*) viewController).pageIndex;
+    {
+        index = ((CitysCompleteForecastViewController*) forecastViewController).pageIndex;
+        [viewController viewWillAppear:YES];
+    }
     else
+    {
         index = ((PageContentViewController*) viewController).pageIndex;
+        [viewController viewWillAppear:YES];
+    }
     
     if (index == NSNotFound) {
         return nil;
@@ -189,10 +262,12 @@ CLLocationManager *locationManager;
     
     if(index == 1)
     {
-        CitysCompleteForecastViewController *forecastController = [self.storyboard instantiateViewControllerWithIdentifier:@"ForecastView"];
-        forecastController.view.backgroundColor=[UIColor redColor];
-        forecastController.pageIndex = index;
-        return forecastController;
+        self.moreDetailsBtn.hidden=YES;
+        forecastViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ForecastView"];
+        forecastViewController.view.backgroundColor=[UIColor redColor];
+        forecastViewController.pageIndex = index;
+        forecastViewController.weatherDataArray = comingWeatherArray;
+        return forecastViewController;
     }
     return nil;
     
@@ -201,17 +276,39 @@ CLLocationManager *locationManager;
 #pragma mark - WebService Delegate Methods
 -(void)didSucceedToFetchJSONData:(NSArray *)cityWeatherArray
 {
-    WeatherList *probablyTodayList = (WeatherList *)[cityWeatherArray objectAtIndex:0];
+    if([cityWeatherArray count])
     {
-        [self.temperatureLabel setText:[NSString stringWithFormat:@"%.02f%@C",[[probablyTodayList.city_temp valueForKey:@"day"] floatValue]-273.15, @"\u00B0" ] ];
-        [self.weatherDescLabel setText:[[probablyTodayList.weather objectAtIndex:0] valueForKey:@"description"]];
-        [self.tempMinMaxLabel setText:[NSString stringWithFormat:@"Min : %.02f%@C Max : %.02f%@C",[[probablyTodayList valueForKeyPath:@"city_temp.min"] floatValue]-273.15, @"\u00B0", [[probablyTodayList valueForKeyPath:@"city_temp.max"] floatValue]-273.15, @"\u00B0" ]];
+        comingWeatherArray = cityWeatherArray;
+    }
+    WeatherList *TodayList = (WeatherList *)[cityWeatherArray objectAtIndex:0];
+    {
+        self.addLocationBtn.hidden=YES;
+        self.cityName.hidden=YES;
+        self.temperatureLabel.hidden=NO;
+        self.weatherDescLabel.hidden=NO;
+        self.tempMinMaxLabel.hidden=NO;
+        self.cityName.hidden=NO;
+        
+        [self.temperatureLabel setText:[NSString stringWithFormat:@"%.02f%@C",[[TodayList.city_temp valueForKey:@"day"] floatValue]-273.15, @"\u00B0" ] ];
+        [self.weatherDescLabel setText:[[TodayList.weather objectAtIndex:0] valueForKey:@"description"]];
+        [self.tempMinMaxLabel setText:[NSString stringWithFormat:@"Min : %.02f%@C Max : %.02f%@C",[[TodayList valueForKeyPath:@"city_temp.min"] floatValue]-273.15, @"\u00B0", [[TodayList valueForKeyPath:@"city_temp.max"] floatValue]-273.15, @"\u00B0" ]];
+        [self.cityName setText:[[NSUserDefaults standardUserDefaults] stringForKey:@"selectedCity"]];
         self.moreDetailsBtn.hidden=NO;
+        [self.view bringSubviewToFront:self.moreDetailsBtn];
+        
+        if(forecastViewController != nil)
+        {
+            forecastViewController.weatherDataArray = cityWeatherArray;
+            [forecastViewController.forecastTable reloadData];
+        }
     }
 }
 
 -(void)didFailedToFetchJSONData:(NSError *)error
 {
-    
+    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:
+                              @"Failure" message:@"Failed to fetch weather data. Please try Later" delegate:self
+                                             cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    [alertView show];
 }
 @end

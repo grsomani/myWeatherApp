@@ -7,12 +7,14 @@
 //
 
 #import "CitysCompleteForecastViewController.h"
-
+#import "ForecastCell.h"
 @interface CitysCompleteForecastViewController ()
 
 @end
 
 @implementation CitysCompleteForecastViewController
+
+@synthesize weatherDataArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -27,6 +29,15 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    [self.forecastTable registerNib:[UINib nibWithNibName:@"ForecastCell"
+                                               bundle:[NSBundle mainBundle]]
+         forCellReuseIdentifier:@"forecastcell"];
+}
+
+-(void) viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
 }
 
 - (void)didReceiveMemoryWarning
@@ -40,12 +51,15 @@
 
 -(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 0;
+    return [weatherDataArray count];
 }
 
 -(UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return nil;
+    static NSString *cellIdentifier = @"forecastcell";
+    ForecastCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    [cell setWeather:(WeatherList *)[weatherDataArray objectAtIndex:indexPath.row]];
+    return cell;
 }
 /*
 #pragma mark - Navigation

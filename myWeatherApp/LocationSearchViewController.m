@@ -30,6 +30,9 @@ NSArray *searchResultsArray;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    self.title = @"Search City";
+    if([[[UIDevice currentDevice] systemVersion] floatValue] > 7.0)
+        self.edgesForExtendedLayout = UIRectEdgeNone;
     
     [self.searchBar becomeFirstResponder];
   
@@ -54,7 +57,9 @@ NSArray *searchResultsArray;
 {
     if(_previousCell != nil)
     {
-        [[AppContext sharedAppContext] saveNewCity:_previousCell.textLabel.text];
+        NSIndexPath *indexPath = [_searchLocationTable indexPathForCell:_previousCell];
+
+        [[AppContext sharedAppContext] saveNewCityWithCityName:[[searchResultsArray objectAtIndex:indexPath.row] valueForKey:@"name"] andCityId:[[searchResultsArray objectAtIndex:indexPath.row] valueForKey:@"cityId"]];
         if([self.delegate respondsToSelector:@selector(locationAdded)])
         {
             [self.delegate locationAdded];
@@ -73,6 +78,7 @@ NSArray *searchResultsArray;
     [AppContext sharedAppContext].delegate=self;
     [[AppContext sharedAppContext] fetchCityListForKeyword:searchBar.text];
     [self.searchBar resignFirstResponder];
+    [self showLoadingSpinner:YES];
 }
 
 #pragma mark - WebServices Delegate
@@ -80,10 +86,16 @@ NSArray *searchResultsArray;
 {
     searchResultsArray = [NSArray arrayWithArray:cityWeatherArray];
     [self.searchLocationTable reloadData];
+    [self showLoadingSpinner:NO];
 }
 -(void)didFailedToFetchJSONData:(NSError *)error
 {
+    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:
+                              @"Failure" message:@"Failed to search. Please try again" delegate:self
+                                             cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    [alertView show];
     NSLog(@"Failed to Search due to %@",error.description);
+    [self showLoadingSpinner:NO];
 }
 
 #pragma - TableView Delegate Methods
@@ -117,6 +129,26 @@ NSArray *searchResultsArray;
     cell.accessoryType=UITableViewCellAccessoryCheckmark;
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [tableView reloadData];
+}
+
+#pragma mark - Progress Spinner Delegate Methods
+-(void)showLoadingSpinner:(BOOL)isLoading
+{
+    if (isLoading && !HUD)
+    {
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.delegate = self;
+    }
+    else
+    {
+        [HUD hide:YES];
+    }
+}
+
+- (void)hudWasHidden:(MBProgressHUD *)hud {
+	// Remove HUD from screen when the HUD was hidded
+	[HUD removeFromSuperview];
+	HUD = nil;
 }
 /*
 #pragma mark - Navigation

@@ -2,7 +2,7 @@
 //  CitiesSaved.h
 //  myWeatherApp
 //
-//  Created by Ganesh Somani on 5/26/14.
+//  Created by Ganesh Somani on 5/30/14.
 //  Copyright (c) 2014 test. All rights reserved.
 //
 
@@ -14,6 +14,7 @@
 @interface CitiesSaved : NSManagedObject
 
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString * cityID;
 @property (nonatomic, retain) NSSet *city_weather;
 @end
 
