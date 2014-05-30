@@ -169,6 +169,10 @@ CLGeocoder *geoCoder;
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
+    if(![[NSUserDefaults standardUserDefaults] stringForKey:@"selectedCity"])
+    {
+        self.addLocationBtn.hidden = NO;
+    }
     NSLog(@"didFailWithError: %@", error);
     UIAlertView *errorAlert = [[UIAlertView alloc]
                                initWithTitle:@"Error" message:@"Failed to Get Your Location" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
@@ -182,6 +186,13 @@ CLGeocoder *geoCoder;
 
     if(![[NSUserDefaults standardUserDefaults] stringForKey:@"selectedCity"])
     {
+        self.cityName.hidden=NO;
+        [self.temperatureLabel setText:@"Auto Loading.."];
+        [self.weatherDescLabel setText:@""];
+        [self.tempMinMaxLabel setText:@""];
+        [self.cityName setText:@""];
+        
+        self.addLocationBtn.hidden = YES;
         [[AppContext sharedAppContext] fetchCityListForLat:newLocation.coordinate.latitude andLong:newLocation.coordinate.longitude];
     }
     
@@ -201,7 +212,11 @@ CLGeocoder *geoCoder;
     if( [viewController isKindOfClass:[CitysCompleteForecastViewController class]])
         index = ((CitysCompleteForecastViewController*) forecastViewController).pageIndex;
     else
+    {
         index = ((PageContentViewController*) viewController).pageIndex;
+        if(![self.cityName.text isEqualToString:@"Loading.."] && !self.cityName.hidden)
+            self.moreDetailsBtn.hidden=NO;
+    }
     
     if ((index == 0) || (index == NSNotFound)) {
         return nil;
@@ -216,13 +231,12 @@ CLGeocoder *geoCoder;
     NSUInteger index;
     if( [viewController isKindOfClass:[CitysCompleteForecastViewController class]])
     {
+        self.moreDetailsBtn.hidden=YES;
         index = ((CitysCompleteForecastViewController*) forecastViewController).pageIndex;
-        [viewController viewWillAppear:YES];
     }
     else
     {
         index = ((PageContentViewController*) viewController).pageIndex;
-        [viewController viewWillAppear:YES];
     }
     
     if (index == NSNotFound) {
@@ -262,7 +276,6 @@ CLGeocoder *geoCoder;
     
     if(index == 1)
     {
-        self.moreDetailsBtn.hidden=YES;
         forecastViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ForecastView"];
         forecastViewController.view.backgroundColor=[UIColor redColor];
         forecastViewController.pageIndex = index;
